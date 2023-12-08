@@ -1,7 +1,13 @@
+import { BrowserRouter } from "react-router-dom";
+import RoutesList from "./RoutesList.js";
+
 function App() {
   return (
-    <div className="App">
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <RoutesList />
+      </div>
+    </BrowserRouter>
   );
 }
 
