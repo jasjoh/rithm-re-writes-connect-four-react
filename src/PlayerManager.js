@@ -11,7 +11,7 @@ import AddPlayerForm from "./AddPlayerForm.js"
  * State:
  *  - None
  *
- * PlayerManager -> PlayerManager -> PlayerList */
+ * Main -> PlayerManager -> PlayerList */
 function PlayerManager({ players, add, remove }) {
   console.log("PlayerManager re-rendered");
 

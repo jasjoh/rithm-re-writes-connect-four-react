@@ -1,7 +1,7 @@
 // import "./BoardPlayCell.css"
 import GamePiece from "./GamePiece";
 
-/** An individual cell in the game board where pieces may be placed
+/** An individual cell in the game board where pieces may exist once dropped
  *
  * Props:
  *  - highlight: whether to highlight the cell as part of a winning set
@@ -10,7 +10,7 @@ import GamePiece from "./GamePiece";
  * State:
  *  - None
  *
- * BoardPlayRow -> BoardPlayCell -> BoardPlayCell*/
+ * BoardPlayRow -> BoardPlayCell -> GamePiece*/
 function BoardPlayCell({ highlight=false, placed=true }) {
   console.log("BoardPlayCell re-rendered");
 

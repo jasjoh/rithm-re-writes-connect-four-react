@@ -1,7 +1,7 @@
 // import "./GameDropRow.css"
 import BoardPlayCell from "./BoardPlayCell";
 
-/** Displays the row where game pieces are 'placed'
+/** Displays a row where game pieces end up after being dropped
  *
  * Props:
  *  - width: The width (# of cells) that should be rendered
