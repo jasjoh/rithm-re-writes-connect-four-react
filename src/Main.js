@@ -30,8 +30,8 @@ function Main() {
     console.log("dropPiece() called with colIndex:", colIndex);
   }
 
-  function add(playerData) {
-    console.log("add called with playerData:", playerData);
+  function add(formData) {
+    console.log("add called with playerData:", formData);
   }
 
   function remove(playerId) {

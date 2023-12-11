@@ -18,14 +18,13 @@ function Game({ gameState, dropPiece }) {
    * - add start / restart button
    */
 
-  // return (
-  //   <div className="Game">
-  //     Game!
-  //   </div>
-  // );
+  function startGame() {
+    console.log('startGame called');
+  }
 
   return (
     <div className="Game">
+      <div className="Game-Button"><button onClick={startGame}>Start Game</button></div>
       <GameBoard boardState={null} dropPiece={dropPiece}/>
     </div>
   );

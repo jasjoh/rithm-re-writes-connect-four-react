@@ -5,3 +5,8 @@
   height: 50px;
   border: solid 1px #666;
 }
+
+.Game-Button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
