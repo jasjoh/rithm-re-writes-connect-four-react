@@ -17,6 +17,15 @@ function Main() {
   * - send gameState
   * - send players
   * - game instance interaction
+  * -- initializing a new game
+  * -- starting the game
+  * -- add / remove players (using player instance)
+  * -- dropping pieces
+  * - adding pieces to board
+  * - update current player
+  * - handle ai callback
+  * - highlight pieces on a win
+  * - update current player display
    */
 
   let players = [
