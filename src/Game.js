@@ -39,17 +39,30 @@ function Game({ game, dropPiece, startGame }) {
     htmlBoardState.push(newRow);
   }
 
-  return (
-    <div className="Game">
-      <div className="Game-Button"><button onClick={handleStartGame}>
-        { game.gameState === 0 ? 'Start Game' : 'Restart Game'}
-      </button></div>
-      <div className="Game-currentPlayer">
-        Current Player: { game.gameState === 0 ? '' : game.currPlayer.name}
+  if (game.gameState === 0) {
+    // game hasn't started, show start button, but no curr player or board
+    return (
+      <div className="Game">
+        <div className="Game-Button"><button onClick={handleStartGame}>
+          Start Game
+        </button></div>
       </div>
-      <GameBoard boardState={game.board} dropPiece={dropPiece}/>
-    </div>
-  );
+    );
+
+  } else {
+    // game has started, show restart + curr player and board
+    return (
+      <div className="Game">
+        <div className="Game-Button"><button onClick={handleStartGame}>
+          Restart Game
+        </button></div>
+        <div className="Game-currentPlayer">
+          Current Player: { game.currPlayer.name }
+        </div>
+        <GameBoard boardState={ game.board } dropPiece={ dropPiece }/>
+      </div>
+    );
+  }
 }
 
 export default Game;

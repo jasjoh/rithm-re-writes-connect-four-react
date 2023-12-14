@@ -11,8 +11,8 @@ import BoardDropCell from "./BoardDropCell";
  *  - None
  *
  * GameBoard -> BoardDropRow -> BoardDropCell */
-function BoardDropRow({ width=3, dropPiece }) {
-  console.log("BoardDropRow re-rendered");
+function BoardDropRow({ width, dropPiece }) {
+  console.log("BoardDropRow re-rendered, passed width of:", width);
 
   let cellsJsx = [];
   let curCol = 0;
@@ -22,6 +22,8 @@ function BoardDropRow({ width=3, dropPiece }) {
     );
     curCol++;
   }
+
+  console.log("drop row cells array populated:", cellsJsx);
 
   return (<tr className="BoardDropRow">{ cellsJsx.map( cell => cell )}</tr>);
 }

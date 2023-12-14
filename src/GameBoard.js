@@ -54,7 +54,7 @@ function GameBoard({ boardState, dropPiece }) {
   return (
     <div className="GameBoard">
       <table className="board"><tbody>
-        <BoardDropRow width={boardState.length} dropPiece={ dropPiece }/>
+        <BoardDropRow width={ boardState[0].length } dropPiece={ dropPiece }/>
         { boardPlayRowsJsx.map( row => row ) }
       </tbody></table>
     </div>

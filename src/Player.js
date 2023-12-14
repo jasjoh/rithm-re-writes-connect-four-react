@@ -1,4 +1,4 @@
-// import "./Player.css"
+import "./Player.css"
 
 /** Displays a specific player that was added to the game and a remove button
  *
@@ -12,12 +12,11 @@
  *  - None
  *
  * PlayerList -> Player */
-function Player({ playerId, playerName="player", playerColor='#ff0000', remove }) {
+function Player({ playerId, playerName, playerColor, remove }) {
   console.log("Player re-rendered");
 
-  const style = {
-    color: playerColor,
-    fontWeight: 'bold'
+  const colorCircleStyle = {
+    backgroundColor: playerColor
   }
 
   function removePlayer(evt) {
@@ -26,8 +25,11 @@ function Player({ playerId, playerName="player", playerColor='#ff0000', remove }
 
   return (
     <div className="Player">
-      <span style={style}>{`${playerName}`}{'  '}</span>
-      <button onClick={removePlayer}>Remove</button>
+      <div className="Player-name">{`${playerName}`}{'  '}</div>
+      <div className="Player-colorDiv">
+        <div className="Player-colorCircle" style={ colorCircleStyle }></div>
+      </div>
+      <button className="Player-removeButton" onClick={removePlayer}>Remove</button>
     </div>
   );
 }

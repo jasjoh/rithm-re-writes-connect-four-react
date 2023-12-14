@@ -86,7 +86,7 @@ class AiPlayer extends Player {
 
 /** Keeps track of a unique instance of the game */
 class Game {
-  constructor(aiCallback, width = 7, height = 6) {
+  constructor(aiCallback, height = 6, width = 7, ) {
     this.width = width;
     this.height = height;
     this.players = [];
@@ -149,6 +149,7 @@ class Game {
    */
   async dropPiece(col) {
     console.log("dropPiece() called for col:", col);
+    debugger;
 
     // if the game is not active, ignore this request and return undefined
     if (this.gameState !== 1) { return; }

@@ -20,6 +20,7 @@ function PlayerList({ players, remove }) {
         key={index}
         playerId={p.id}
         playerName={p.name}
+        playerColor={p.color}
         remove={remove}/>)}
     </div>
   );
