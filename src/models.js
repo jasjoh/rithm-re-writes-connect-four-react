@@ -27,18 +27,6 @@ class Player {
     this.ai = aiFlag;
     this.id = generateMD5HashHex(name);
   }
-
-  /** Joins a player to a game */
-  join(game) {
-    this.game = game;
-    this.game.addPlayer(this);
-  }
-
-  /** Removes a player from a game */
-  leave(game) {
-    this.game = undefined;
-    this.game.removePlayer(this.id);
-  }
 }
 
 /**
@@ -53,9 +41,9 @@ class AiPlayer extends Player {
   }
 
   /** Called to have an AI player take its turn */
-  async takeTurn() {
+  async takeTurn(game) {
     console.log("I am taking my turn. I am:", this.name);
-    await this._aiDropPiece();
+    await this._aiDropPiece(game);
   }
 
   /** Let's AI know it's a new game */
@@ -83,15 +71,15 @@ class AiPlayer extends Player {
   }
 
   /** Internal function which handles attempting to drop pieces */
-  async _aiDropPiece() {
+  async _aiDropPiece(game) {
     console.log("_aiDropPiece() called for player:", this.name);
     await delay(delayInMs);
     let colToAttempt = Math.floor(Math.random() * this.availCols.length);
-    if (await this.game.dropPiece(this.availCols[colToAttempt])) { return; }
+    if (await game.dropPiece(this.availCols[colToAttempt])) { return; }
     console.log("col was full so we're removing it from avail:", colToAttempt);
     this.availCols.splice(colToAttempt, 1);
     console.log("updated availCols after splice:", this.availCols);
-    await this._aiDropPiece();
+    await this._aiDropPiece(game);
     return;
   }
 }
@@ -104,7 +92,7 @@ class Game {
     this.players = [];
     this.placedPieces = [];
     this.gameState = 0; // 0 = not started, 1 = started, 2 = won, 3 = tied
-    this.board = undefined;
+    this.board = this._createBoardState();
     this.aiCallback = aiCallback;
   }
 
@@ -114,6 +102,7 @@ class Game {
    * */
   addPlayer(player) {
     //TODO: Error logic for player already added to game.
+    console.log("game.addPlayer() called");
     this.players.push(player);
   }
 
@@ -136,8 +125,6 @@ class Game {
     if (this.players.length < 2) {
       throw new Error("Not enough players!");
     }
-
-    this.board = this._createBoardState();
 
     // let AI players know it's a new game
     for (let player of this.players) {
@@ -215,9 +202,9 @@ class Game {
       console.log("_populateBoardSpaces() called.")
       for (let y = 0; y < this.height; y++) {
         for (let x = 0; x < this.width; x++) {
-          console.log("attempting to set game board for xy:", y, x);
+          // console.log("attempting to set game board for xy:", y, x);
           boardState[y][x] = {
-            value: null,
+            player: null,
             validCoordSets: _populateValidCoordSets(y, x)
           };
         }
@@ -227,7 +214,7 @@ class Game {
 
       /** Accepts board coordinates and return array of valid coord sets */
       function _populateValidCoordSets(y, x) {
-        console.log("_populateValidCoordSets called with yx:", y, x);
+        // console.log("_populateValidCoordSets called with yx:", y, x);
         const vcs = [];
         let coordSet = [];
 
@@ -294,7 +281,7 @@ class Game {
           vcs.push(coordSet);
         }
 
-        console.log("Valid coord sets populated:", vcs)
+        // console.log("Valid coord sets populated:", vcs)
         return vcs;
       }
     }
@@ -307,7 +294,7 @@ class Game {
   _findEmptyCellInColumn(col) {
     console.log("attempting to find empty cell at col:", col);
     // check if the column is full and return 'null' if true
-    if (this.board[0][col].value !== null) {
+    if (this.board[0][col].player !== null) {
       console.log("this col was full");
       return null;
     }
@@ -318,7 +305,7 @@ class Game {
     // -- find a non-null cell (and return the slot above)
     // -- reach the last cell and return it
     while (row < this.height) {
-      if (this.board[row][col].value !== null) {
+      if (this.board[row][col].player !== null) {
         console.log("found a piece at row, col", row, " ", col);
         console.log("returning the row above:", row - 1);
         return row - 1;
@@ -330,7 +317,7 @@ class Game {
 
   /** Adds the players numbers to the JS board where they dropped a piece */
   _addToBoard(y, x) {
-    this.board[y][x].value = this.currPlayer.id;
+    this.board[y][x].player = this.currPlayer;
     this.placedPieces.push([y, x]);
     console.log("added to board");
   }
@@ -343,11 +330,6 @@ class Game {
   /** Checks for whether the game has ended and notifies the user if so */
   async _checkForGameEnd() {
     console.log("checking for game end");
-    // check for tie
-    if(this.board[0].every(cell => cell.value !== null)) {
-      setTimeout(this._endGame(3), 10);
-      return;
-    }
 
     // check if it's a win
     // check each placed piece
@@ -358,11 +340,17 @@ class Game {
       // check each valid coord set for this piece
       for (let j = 0; j < this.board[px][py].validCoordSets.length; j++) {
         const validCoordSets = this.board[px][py].validCoordSets[j];
-        if(validCoordSets.every(c => this.board[c[0]][c[1]].value === this.currPlayer.id)) {
+        if(validCoordSets.every(c => this.board[c[0]][c[1]].player.id === this.currPlayer.id)) {
           setTimeout(this._endGame(2), 10);
           return;
         }
       }
+    }
+
+    // check for tie
+    if(this.board[0].every(cell => cell.player !== null)) {
+      setTimeout(this._endGame(3), 10);
+      return;
     }
 
     // switch players
@@ -372,6 +360,9 @@ class Game {
   /** Switches to the next player */
   async _updateCurrPlayer(random) {
     console.log("switching players")
+    let wasAiPlayer = false;
+
+    if (this.currPlayer instanceof AiPlayer) { wasAiPlayer = true; }
 
     if (random) {
       let totalPlayers = this.players.length;
@@ -385,18 +376,19 @@ class Game {
       this.currPlayer = this.players[this.currPlayerIndex];
     }
 
-    await this.aiCallback();
+    if (wasAiPlayer) { await this.aiCallback(); }
+
     console.log("current player now:", this.currPlayer);
 
     if (this.currPlayer instanceof AiPlayer) {
       console.log("ai player taking their turn");
-      await this.currPlayer.takeTurn();
+      await this.currPlayer.takeTurn(this);
     }
 
     return;
   }
 }
 
-
+export { Player, AiPlayer, Game };
 
 

@@ -3,7 +3,7 @@ import "./GamePiece.css"
 /** An individual game piece dropped by a player
  *
  * Props:
- *  - Color: The background color of the piece based on player selection
+ *  - color: The background color of the piece based on player selection
  *
  * State:
  *  - None

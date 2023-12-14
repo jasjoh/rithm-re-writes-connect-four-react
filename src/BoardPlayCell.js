@@ -11,7 +11,7 @@ import GamePiece from "./GamePiece";
  *  - None
  *
  * BoardPlayRow -> BoardPlayCell -> GamePiece*/
-function BoardPlayCell({ highlight=false, placed=true }) {
+function BoardPlayCell({ highlight=false, color=null}) {
   console.log("BoardPlayCell re-rendered");
 
   let style = {}
@@ -22,7 +22,7 @@ function BoardPlayCell({ highlight=false, placed=true }) {
 
   return (
     <td className="BoardPlayCell" style={style}>
-      { placed ? <GamePiece /> : null }
+      { color !== null ? <GamePiece color={color}/> : null }
     </td>
   );
 }

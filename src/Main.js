@@ -1,5 +1,7 @@
 import Game from "./Game";
 import PlayerManager from "./PlayerManager";
+import { Player, AiPlayer, Game as GameModel } from "./models";
+import { useEffect, useState } from "react";
 
 /** Parent level page for both the alert, player manager and game area
  *
@@ -14,43 +16,76 @@ function Main() {
   console.log("Main re-rendered");
 
   /** TODO:
-  * - send gameState
-  * - send players
-  * - game instance interaction
-  * -- initializing a new game
-  * -- starting the game
-  * -- add / remove players (using player instance)
-  * -- dropping pieces
-  * - adding pieces to board
-  * - update current player
-  * - handle ai callback
   * - highlight pieces on a win
-  * - update current player display
+  * - add tests
+  * - add typescript
    */
 
-  let players = [
-    {
-      name: 'foo',
-      id: '1234'
-    }
-  ]
+  const [game, setGame] = useState(undefined);
+  const [renderToggle, setRenderToggle] = useState(false);
 
+  /** Called once on mount to initialize a new game and set state */
+  useEffect(function initGame() {
+    console.log("initGame() useEffect called")
+    setGame(new GameModel(aiCallback));
+  }, [])
+
+  console.log("Current game instance:", game);
+
+  /** Called by the game instance when an AI player has taken their turn
+   * Needs to trigger a re-render of Game component */
+  function aiCallback() {
+    console.log("aiCallback() called")
+    console.log("this:", this);
+    setRenderToggle(renderToggle => !renderToggle);
+  }
+
+  /** Called when a user drops a piece */
   function dropPiece(colIndex) {
     console.log("dropPiece() called with colIndex:", colIndex);
+    game.dropPiece(colIndex);
+    setRenderToggle(renderToggle => !renderToggle);
   }
 
-  function add(formData) {
-    console.log("add called with playerData:", formData);
+  /**
+   * Called when a user adds a player to a game
+   * formData = { playerName, color, ai }
+   * */
+  function addPlayer(formData) {
+    console.log("addPlayer called with playerData:", formData);
+    if (formData.ai === true) {
+      game.addPlayer(new AiPlayer(formData.playerName, formData.color))
+    } else {
+      game.addPlayer(new Player(formData.playerName, formData.color))
+    }
+    console.log("this:", this);
+    console.log("player added to game:", game);
+    setRenderToggle(renderToggle => !renderToggle);
   }
 
-  function remove(playerId) {
-    console.log("remove called with playerId:", playerId);
+  /** Called when a user removes a player from a game */
+  async function removePlayer(playerId) {
+    console.log("removePlayer called with playerId:", playerId);
+    await game.removePlayer(playerId);
+    setRenderToggle(renderToggle => !renderToggle);
   }
+
+  /** Called when a user clicks Start or Restart button */
+  async function startGame() {
+    console.log("function startGame() called");
+    await game.startGame();
+    setRenderToggle(renderToggle => !renderToggle);
+  }
+
+  if (game === undefined) { return <div> Game loading </div>}
 
   return (
     <div className="Main">
-      <PlayerManager players={players} add={add} remove={remove} />
-      <Game gameState={null} dropPiece={dropPiece}/>
+      <PlayerManager players={game.players} add={addPlayer} remove={removePlayer} />
+      <Game
+        game={game}
+        dropPiece={dropPiece}
+        startGame={startGame} />
     </div>
   );
 }

@@ -17,6 +17,7 @@ import BoardDropRow from "./BoardDropRow";
  * Main -> GameBoard -> BoardPlayCell */
 function GameBoard({ boardState, dropPiece }) {
   console.log("GameBoard re-rendered");
+  console.log("called w/ boardState:", boardState);
   /**
    * boardState structure:
    * - each row (y) is an array of cell states
