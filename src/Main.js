@@ -23,6 +23,7 @@ function Main() {
 
   const [game, setGame] = useState(undefined);
   const [renderToggle, setRenderToggle] = useState(false);
+  let alert = '';
 
   /** Called once on mount to initialize a new game and set state */
   useEffect(function initGame() {
@@ -79,9 +80,24 @@ function Main() {
 
   if (game === undefined) { return <div> Game loading </div>}
 
+  // handle winning game
+  if (game.gameState === 2) {
+    // highlight winning pieces
+    for (let coord of game.winningSet) {
+      game.board[coord[0]][coord[1]].highlight = true;
+    }
+    alert = `${game.currPlayer.name} has won the game!`;
+  }
+
+  // handle tie
+  if (game.gameState === 3) {
+    alert = `Game is tied!`;
+  }
+
   return (
     <div className="Main">
       <PlayerManager players={game.players} add={addPlayer} remove={removePlayer} />
+      <div>{ alert }</div>
       <Game
         game={game}
         dropPiece={dropPiece}

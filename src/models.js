@@ -94,6 +94,7 @@ class Game {
     this.gameState = 0; // 0 = not started, 1 = started, 2 = won, 3 = tied
     this.board = this._createBoardState();
     this.aiCallback = aiCallback;
+    this.winningSet = [];
   }
 
   /**
@@ -334,12 +335,12 @@ class Game {
     // check if it's a win
     // check each placed piece
     for (let i = 0; i < this.placedPieces.length; i++) {
-      const px = this.placedPieces[i][0];
-      const py = this.placedPieces[i][1];
-      // console.log("checking placed piece at xy", px, py);
+      const py = this.placedPieces[i][0];
+      const px = this.placedPieces[i][1];
+      // console.log("checking placed piece at xy", py, px);
       // check each valid coord set for this piece
-      for (let j = 0; j < this.board[px][py].validCoordSets.length; j++) {
-        const validCoordSets = this.board[px][py].validCoordSets[j];
+      for (let j = 0; j < this.board[py][px].validCoordSets.length; j++) {
+        const validCoordSets = this.board[py][px].validCoordSets[j];
         if (
           validCoordSets.every(
             c => {
@@ -349,7 +350,9 @@ class Game {
             }
           )
         ) {
+          console.log("winner found")
           setTimeout(this._endGame(2), 10);
+          this.winningSet = this.board[py][px].validCoordSets[j];
           return;
         }
       }
