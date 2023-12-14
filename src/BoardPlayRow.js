@@ -17,7 +17,8 @@ function BoardPlayRow({ rowState }) {
 
   let cellsJsx = [];
   for (let i = 0; i < rowState.length; i++) {
-    const color = rowState[i].color;
+    let color = undefined;
+    if (rowState[i].player) { color = rowState[i].player.color; }
     const highlight = rowState[i].highlight;
     cellsJsx.push(
       <BoardPlayCell key={i} highlight={highlight} color={color} />

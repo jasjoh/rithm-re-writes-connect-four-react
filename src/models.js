@@ -149,7 +149,6 @@ class Game {
    */
   async dropPiece(col) {
     console.log("dropPiece() called for col:", col);
-    debugger;
 
     // if the game is not active, ignore this request and return undefined
     if (this.gameState !== 1) { return; }
@@ -341,7 +340,15 @@ class Game {
       // check each valid coord set for this piece
       for (let j = 0; j < this.board[px][py].validCoordSets.length; j++) {
         const validCoordSets = this.board[px][py].validCoordSets[j];
-        if(validCoordSets.every(c => this.board[c[0]][c[1]].player.id === this.currPlayer.id)) {
+        if (
+          validCoordSets.every(
+            c => {
+              return (
+                this.board[c[0]][c[1]].player !== null &&
+                this.board[c[0]][c[1]].player.id === this.currPlayer.id)
+            }
+          )
+        ) {
           setTimeout(this._endGame(2), 10);
           return;
         }
