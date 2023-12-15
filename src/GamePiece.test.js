@@ -8,7 +8,8 @@ test('renders GamePiece component with default color', () => {
   );
   const gamePieceDiv = container.querySelector(".GamePiece");
   expect(gamePieceDiv).toHaveStyle({
-    backgroundColor: 'rgb(255, 0, 0);'
+    backgroundColor: '#ff0000;'
+    // backgroundColor: 'rgb(255, 0, 0);'
   });
 });
 

@@ -9,7 +9,7 @@ import "./GamePiece.css"
  *  - None
  *
  * BoardPlayCell -> GamePiece*/
-function GamePiece({ color='#ff0000'}) {
+function GamePiece({ color='#ff0000' }) {
   console.log("GamePiece re-rendered");
 
   const style = {

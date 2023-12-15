@@ -25,7 +25,7 @@ function BoardPlayRow({ rowState }) {
     )
   }
 
-  return (<tr>{ cellsJsx.map( cell => cell ) }</tr>);
+  return (<tr className="BoardPlayRow">{ cellsJsx.map( cell => cell ) }</tr>);
 }
 
 export default BoardPlayRow;
