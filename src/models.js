@@ -127,6 +127,11 @@ class Game {
       throw new Error("Not enough players!");
     }
 
+    // on game restart, need to reset these
+    this.placedPieces = [];
+    this.board = this._createBoardState();
+    this.winningSet = [];
+
     this.gameState = 1;
 
     // let AI players know it's a new game
