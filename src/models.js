@@ -47,16 +47,16 @@ class AiPlayer extends Player {
   }
 
   /** Let's AI know it's a new game */
-  newGame() {
-    this.availCols = this._aiInitAvailCols();
+  newGame(game) {
+    this.availCols = this._aiInitAvailCols(game);
   }
 
   /** Internal function that generates available columns to drop pieces in */
-  _aiInitAvailCols() {
+  _aiInitAvailCols(game) {
     let availCols = []
     let startCol = 0;
     try {
-      while (startCol < this.game.width) {
+      while (startCol < game.width) {
         availCols.push(startCol);
         startCol++;
       }
@@ -127,10 +127,12 @@ class Game {
       throw new Error("Not enough players!");
     }
 
+    this.gameState = 1;
+
     // let AI players know it's a new game
     for (let player of this.players) {
       if (player instanceof AiPlayer) {
-        player.newGame();
+        player.newGame(this);
       }
     }
 
@@ -139,8 +141,6 @@ class Game {
 
     console.log("game players:", this.players);
     console.log("current player:", this.currPlayer);
-
-    this.gameState = 1;
   }
 
   /**
