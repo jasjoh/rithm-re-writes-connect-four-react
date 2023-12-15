@@ -103,7 +103,7 @@ class Game {
    * */
   addPlayer(player) {
     //TODO: Error logic for player already added to game.
-    console.log("game.addPlayer() called");
+    // console.log("game.addPlayer() called");
     this.players.push(player);
   }
 
@@ -122,7 +122,7 @@ class Game {
 
   /** Starts a game once at least two players have been added */
   async startGame() {
-    console.log("game.startGame() called")
+    // console.log("game.startGame() called")
     if (this.players.length < 2) {
       throw new Error("Not enough players!");
     }
@@ -144,8 +144,8 @@ class Game {
     // select starting player
     await this._updateCurrPlayer(true);
 
-    console.log("game players:", this.players);
-    console.log("current player:", this.currPlayer);
+    // console.log("game players:", this.players);
+    // console.log("current player:", this.currPlayer);
   }
 
   /**
@@ -154,16 +154,16 @@ class Game {
    * If room does NOT exist (column is full), returns false
    */
   async dropPiece(col) {
-    console.log("dropPiece() called for col:", col);
+    // console.log("dropPiece() called for col:", col);
 
     // if the game is not active, ignore this request and return undefined
     if (this.gameState !== 1) { return; }
 
     // find the next available space (row) for the piece in the target column
     var targetRow = this._findEmptyCellInColumn(col);
-    console.log("target row found:", targetRow);
+    // console.log("target row found:", targetRow);
     if (targetRow === null) {
-      console.log("col was full, returning false to dropPiece()")
+      // console.log("col was full, returning false to dropPiece()")
       return false;
     } // no space so ignore the click
 
@@ -180,7 +180,7 @@ class Game {
    * valid potential winning board piece sequences.
    */
   _createBoardState() {
-    console.log("createBoardState() called");
+    // console.log("createBoardState() called");
 
     const boardState = [];
     this.placedPieces = [];
@@ -192,7 +192,7 @@ class Game {
 
     /** Initializes the valid boundaries of the board */
     function _initializeMatrix() {
-      console.log("_initializeMatrix() called.");
+      // console.log("_initializeMatrix() called.");
       for (let y = 0; y < this.height; y++) {
         const row = [];
         for (let x = 0; x < this.width; x++) {
@@ -200,12 +200,12 @@ class Game {
         }
         boardState.push(row);
       }
-      console.log("Matrix initialized.")
+      // console.log("Matrix initialized.")
     }
 
     /** Adds board spaces to the board matrix */
     function _populateBoardSpaces() {
-      console.log("_populateBoardSpaces() called.")
+      // console.log("_populateBoardSpaces() called.")
       for (let y = 0; y < this.height; y++) {
         for (let x = 0; x < this.width; x++) {
           // console.log("attempting to set game board for xy:", y, x);
@@ -216,7 +216,7 @@ class Game {
         }
       }
 
-      console.log("Board spaces populated:", boardState);
+      // console.log("Board spaces populated:", boardState);
 
       /** Accepts board coordinates and return array of valid coord sets */
       function _populateValidCoordSets(y, x) {
@@ -298,10 +298,10 @@ class Game {
    * If the column is full (has no null values), returns null
    */
   _findEmptyCellInColumn(col) {
-    console.log("attempting to find empty cell at col:", col);
+    // console.log("attempting to find empty cell at col:", col);
     // check if the column is full and return 'null' if true
     if (this.board[0][col].player !== null) {
-      console.log("this col was full");
+      // console.log("this col was full");
       return null;
     }
 
@@ -312,8 +312,8 @@ class Game {
     // -- reach the last cell and return it
     while (row < this.height) {
       if (this.board[row][col].player !== null) {
-        console.log("found a piece at row, col", row, " ", col);
-        console.log("returning the row above:", row - 1);
+        // console.log("found a piece at row, col", row, " ", col);
+        // console.log("returning the row above:", row - 1);
         return row - 1;
       }
       row++;
@@ -325,7 +325,7 @@ class Game {
   _addToBoard(y, x) {
     this.board[y][x].player = this.currPlayer;
     this.placedPieces.push([y, x]);
-    console.log("added to board");
+    // console.log("added to board");
   }
 
   /** End the game and announce results */
@@ -335,7 +335,7 @@ class Game {
 
   /** Checks for whether the game has ended and notifies the user if so */
   async _checkForGameEnd() {
-    console.log("checking for game end");
+    // console.log("checking for game end");
 
     // check if it's a win
     // check each placed piece
@@ -355,7 +355,7 @@ class Game {
             }
           )
         ) {
-          console.log("winner found")
+          // console.log("winner found")
           setTimeout(this._endGame(2), 10);
           this.winningSet = this.board[py][px].validCoordSets[j];
           return;
@@ -375,7 +375,7 @@ class Game {
 
   /** Switches to the next player */
   async _updateCurrPlayer(random) {
-    console.log("switching players")
+    // console.log("switching players")
     let wasAiPlayer = false;
 
     if (this.currPlayer instanceof AiPlayer) { wasAiPlayer = true; }
@@ -394,10 +394,10 @@ class Game {
 
     if (wasAiPlayer) { await this.aiCallback(); }
 
-    console.log("current player now:", this.currPlayer);
+    // console.log("current player now:", this.currPlayer);
 
     if (this.currPlayer instanceof AiPlayer) {
-      console.log("ai player taking their turn");
+      // console.log("ai player taking their turn");
       await this.currPlayer.takeTurn(this);
     }
 

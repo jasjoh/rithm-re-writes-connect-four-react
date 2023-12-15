@@ -15,7 +15,7 @@ function BoardDropCell({ colIndex, dropPiece }) {
 
   /** Handles a click and calls dropPiece with correct column index */
   function handleClick(evt) {
-    console.log("BoardDropCell clicked, calling dropPiece with:", colIndex);
+    // console.log("BoardDropCell clicked, calling dropPiece with:", colIndex);
     dropPiece(colIndex);
   }
 

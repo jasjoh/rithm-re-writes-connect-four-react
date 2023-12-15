@@ -27,23 +27,22 @@ function Main() {
 
   /** Called once on mount to initialize a new game and set state */
   useEffect(function initGame() {
-    console.log("initGame() useEffect called")
+    // console.log("initGame() useEffect called")
     setGame(new GameModel(aiCallback));
   }, [])
 
-  console.log("Current game instance:", game);
+  // console.log("Current game instance:", game);
 
   /** Called by the game instance when an AI player has taken their turn
    * Needs to trigger a re-render of Game component */
   function aiCallback() {
-    console.log("aiCallback() called")
-    console.log("this:", this);
+    // console.log("aiCallback() called")
     setRenderToggle(renderToggle => !renderToggle);
   }
 
   /** Called when a user drops a piece */
   function dropPiece(colIndex) {
-    console.log("dropPiece() called with colIndex:", colIndex);
+    // console.log("dropPiece() called with colIndex:", colIndex);
     game.dropPiece(colIndex);
     setRenderToggle(renderToggle => !renderToggle);
   }
@@ -53,27 +52,26 @@ function Main() {
    * formData = { playerName, color, ai }
    * */
   function addPlayer(formData) {
-    console.log("addPlayer called with playerData:", formData);
+    // console.log("addPlayer called with playerData:", formData);
     if (formData.ai === true) {
       game.addPlayer(new AiPlayer(formData.playerName, formData.color))
     } else {
       game.addPlayer(new Player(formData.playerName, formData.color))
     }
-    console.log("this:", this);
-    console.log("player added to game:", game);
+    // console.log("player added to game:", game);
     setRenderToggle(renderToggle => !renderToggle);
   }
 
   /** Called when a user removes a player from a game */
   async function removePlayer(playerId) {
-    console.log("removePlayer called with playerId:", playerId);
+    // console.log("removePlayer called with playerId:", playerId);
     await game.removePlayer(playerId);
     setRenderToggle(renderToggle => !renderToggle);
   }
 
   /** Called when a user clicks Start or Restart button */
   async function startGame() {
-    console.log("function startGame() called");
+    // console.log("function startGame() called");
     await game.startGame();
     setRenderToggle(renderToggle => !renderToggle);
   }

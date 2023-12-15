@@ -13,7 +13,7 @@ import BoardPlayCell from "./BoardPlayCell";
  * GameBoard -> BoardPlayRow -> BoardPlayCell */
 function BoardPlayRow({ rowState }) {
   console.log("BoardPlayRow re-rendered");
-  console.log("rowState passed in is:", rowState);
+  // console.log("rowState passed in is:", rowState);
 
   let cellsJsx = [];
   for (let i = 0; i < rowState.length; i++) {

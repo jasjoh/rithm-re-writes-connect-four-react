@@ -23,7 +23,7 @@ function BoardDropRow({ width, dropPiece }) {
     curCol++;
   }
 
-  console.log("drop row cells array populated:", cellsJsx);
+  // console.log("drop row cells array populated:", cellsJsx);
 
   return (<tr className="BoardDropRow">{ cellsJsx.map( cell => cell )}</tr>);
 }

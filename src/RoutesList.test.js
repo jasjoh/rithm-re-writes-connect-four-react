@@ -1,10 +1,10 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import RoutesList from './RoutesList';
 
 test('renders Main component for / route', () => {
-  const { container, debug } = render(
+  const { container } = render(
     <MemoryRouter initialEntries={['/']}>
       <RoutesList />
     </MemoryRouter>
@@ -14,8 +14,8 @@ test('renders Main component for / route', () => {
 });
 
 test('redirects to Main for unknown routes', () => {
-  const { container, debug } = render(
-    <MemoryRouter initialEntries={['/']}>
+  const { container } = render(
+    <MemoryRouter initialEntries={['/unknown']}>
       <RoutesList />
     </MemoryRouter>
   );
