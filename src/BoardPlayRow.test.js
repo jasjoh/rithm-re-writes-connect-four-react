@@ -32,7 +32,7 @@ function createRowState(rows=1, players=0, highlights=0) {
 }
 
 test('renders BoardPlayRow component no players', () => {
-  const { container, debug } = render(
+  const { container } = render(
     <BoardPlayRow rowState={createRowState(0)}/>
   );
 
@@ -41,7 +41,7 @@ test('renders BoardPlayRow component no players', () => {
 });
 
 test('renders BoardPlayRow component 1 player, no highlight', () => {
-  const { container, debug } = render(
+  const { container } = render(
     <BoardPlayRow rowState={createRowState(1, 1)}/>
   );
 
@@ -59,7 +59,7 @@ test('renders BoardPlayRow component 1 player, no highlight', () => {
 });
 
 test('renders BoardPlayRow component 2 players, no highlight', () => {
-  const { container, debug } = render(
+  const { container } = render(
     <BoardPlayRow rowState={createRowState(2, 2)}/>
   );
 
@@ -69,7 +69,7 @@ test('renders BoardPlayRow component 2 players, no highlight', () => {
 });
 
 test('renders BoardPlayRow component 1 player and highlight', () => {
-  const { container, debug } = render(
+  const { container } = render(
     <BoardPlayRow rowState={createRowState(1, 1, 1)}/>
   );
 
@@ -81,7 +81,7 @@ test('renders BoardPlayRow component 1 player and highlight', () => {
 });
 
 test('renders BoardPlayRow component 2 rows, 1 player', () => {
-  const { container, debug } = render(
+  const { container } = render(
     <BoardPlayRow rowState={createRowState(2, 1)}/>
   );
 
