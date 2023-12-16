@@ -14,7 +14,7 @@ import BoardDropRow from "./BoardDropRow";
  * State:
  *  - None
  *
- * Main -> GameBoard -> BoardPlayCell */
+ * Main -> GameBoard -> [ BoardDropRow, BoardPlayRow ] */
 function GameBoard({ boardState, dropPiece }) {
   console.log("GameBoard re-rendered");
   // console.log("called w/ boardState:", boardState);
@@ -22,21 +22,9 @@ function GameBoard({ boardState, dropPiece }) {
    * boardState structure:
    * - each row (y) is an array of cell states
    * - each cell state (x) is either null or a player ID   *
-   */
-
-  if (!boardState) {
-    boardState = [
-      [null, null, null, null, null, null],
-      [null, null, null, null, null, null],
-      [null, null, null, null, null, null],
-      [null, null, null, null, null, null],
-      [null, null, null, null, null, null],
-      [null, null, null, null, null, null]
-    ]
-  }
-
-  /** For each row, we need to render that row, passing the Row component
-   * it's row state (an array of either null or player ID values) */
+   * - For each row, we need to render that row, passing the Row component
+   * - its row state (an array of either null or player ID values)
+   * */
 
   // Build array of BoardPlayRows
   let boardPlayRowsJsx = boardState.map( (row, index) => {
@@ -44,16 +32,9 @@ function GameBoard({ boardState, dropPiece }) {
     return <BoardPlayRow key={index} rowState={row} />;
   })
 
-
-  // return (
-  //   <div className="GameBoard">
-  //     GameBoard!
-  //   </div>
-  // );
-
   return (
     <div className="GameBoard">
-      <table className="board"><tbody>
+      <table className="GameBoard-board"><tbody>
         <BoardDropRow width={ boardState[0].length } dropPiece={ dropPiece }/>
         { boardPlayRowsJsx.map( row => row ) }
       </tbody></table>

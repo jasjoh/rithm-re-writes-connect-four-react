@@ -20,7 +20,11 @@ function BoardDropCell({ colIndex, dropPiece }) {
   }
 
   return (
-    <td className="BoardDropCell" onClick={handleClick}></td>
+    <td
+      className="BoardDropCell"
+      id={`BoardDropCell-${colIndex}`}
+      onClick={handleClick}>
+    </td>
   );
 }
 
