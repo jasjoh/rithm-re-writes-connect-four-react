@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import GameBoard from './GameBoard'
+import { createMockGame, createBoardState, setCellState } from './testHelpers';
 
 /**
  * Props:
@@ -20,34 +21,6 @@ import GameBoard from './GameBoard'
  *
  **/
 
-function createBoardState(height=3, width=3) {
-  let boardState = [];
-  let curRow = 0;
-  while (curRow < height) {
-    let row = [];
-    let curCol = 0;
-    while (curCol < width) {
-      row.push(
-        {
-          player: null
-        }
-      )
-      curCol++;
-    }
-    boardState.push(row);
-    curRow++;
-  }
-  return boardState;
-}
-
-function setCellState(board, y, x, player, highlight) {
-  if (player !== undefined) {
-    board[y][x].player = player;
-  }
-  if (highlight) {
-    board[y][x].highlight = true;
-  }
-}
 
 test('renders GameBoard component with 3x3 boardState', () => {
   let boardState = createBoardState();
