@@ -28,7 +28,7 @@ function Game({ game, dropPiece, startGame }) {
     // game hasn't started, show start button, but no curr player or board
     return (
       <div className="Game">
-        <div className="Game-Button"><button onClick={handleStartGame}>
+        <div className="Game-button"><button onClick={handleStartGame}>
           Start Game
         </button></div>
       </div>
@@ -38,9 +38,11 @@ function Game({ game, dropPiece, startGame }) {
     // game has started, show restart + curr player and board
     return (
       <div className="Game">
-        <div className="Game-Button"><button onClick={handleStartGame}>
+        <div className="Game-button-div">
+          <button className="Game-button" onClick={handleStartGame}>
           Restart Game
-        </button></div>
+          </button>
+        </div>
         <div className="Game-currentPlayer">
           Current Player: { game.currPlayer.name }
         </div>

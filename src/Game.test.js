@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import Game from './Game'
 import GameBoard from './GameBoard';
-import { createMockGame, createBoardState, setCellState } from './testHelpers';
+import { createMockGame, createBoardState } from './testHelpers';
 
 /** Displays the game area with the start / restart button and game board
  *
@@ -23,11 +23,6 @@ import { createMockGame, createBoardState, setCellState } from './testHelpers';
  * - Start / Restart Button
  * - Current Player
  * - GameBoard (passing game.board and dropPiece())
- *
- * Test Goals
- * - Ensure all logic is correct
- * - Ensure non-component renders are good
- * - Ensure any modified data is in the expected format
  *
  * Main -> Game -> GameBoard */
 
@@ -55,10 +50,29 @@ beforeEach(() => {
   startGameCalled = false;
 })
 
-test('correctly passes correct params to GameBoard', () => {
+test('Game component renders without crashing when passed valid params', () => {
+  // default game has player count of 0 and gameState of 0
+  // only empty div should be rendered
+
+  const { container } = render(
+    <Game game={game} dropPiece={dropPiece} startGame={startGame}/>
+  );
+
+  const gameDiv = container.querySelector("div");
+  expect(gameDiv).toHaveClass('Game');
+
+  expect(container.querySelector(".Game-button")).toBeNull();
+  expect(container.querySelector(".Game-currentPlayer")).toBeNull();
+
+  expect(GameBoard).not.toHaveBeenCalled();
+});
+
+test('Game component passes correct params to GameBoard', () => {
   game.players = [1,2];
   game.gameState = 1;
+
   render(<Game game={game} dropPiece={dropPiece} startGame={startGame}/>)
+
   expect(GameBoard).toHaveBeenCalled();
   // we could also use expect.objectContaining({ key: value }) instead of literal
   expect(GameBoard).toHaveBeenCalledWith({
@@ -67,48 +81,56 @@ test('correctly passes correct params to GameBoard', () => {
   }, expect.anything()) // expect.anything() accounts for {} passed in all React calls
 });
 
+test('Game component renders Start Game but not game board when 2+ players and game not started', () => {
+  game.players = [1,2];
+  game.gameState = 0;
 
-test('renders Game component without crashing', () => {
   const { container } = render(
     <Game game={game} dropPiece={dropPiece} startGame={startGame}/>
   );
 
   const gameDiv = container.querySelector("div");
   expect(gameDiv).toHaveClass('Game');
+
+  expect(container.querySelector(".Game-button")).not.toBeNull();
+  expect(container.querySelector(".Game-currentPlayer")).toBeNull();
+
+  const button = container.querySelector(".Game-button");
+  expect(button).toHaveTextContent('Start Game');
+
+  expect(GameBoard).not.toHaveBeenCalled();
 });
 
-// test('correctly passed dropPiece() callback function to GameBoard', () => {
-//   let boardState = createBoardState();
-//   setCellState(boardState, 1, 1, { id: 12345, color: '#c4c4c4'}, false);
-//   setCellState(boardState, 2, 2, { id: 7892, color: '#a4a4a4'}, true);
+test('Game component renders Restart Game and game board when 2+ players and game is started', () => {
+  game.players = [1,2];
+  game.gameState = 1;
 
-//   let returnedColIndex;
-//   function dropPiece(colIndex) {
-//     returnedColIndex = colIndex;
-//   }
+  const { container } = render(
+    <Game game={game} dropPiece={dropPiece} startGame={startGame}/>
+  );
 
-//   const { container } = render(
-//     <Game boardState={boardState} dropPiece={dropPiece}/>
-//   );
+  const gameDiv = container.querySelector("div");
+  expect(gameDiv).toHaveClass('Game');
 
-//   const gameDiv = container.querySelector("div");
-//   expect(gameDiv).toHaveClass('Game');
+  expect(container.querySelector(".Game-button")).not.toBeNull();
+  expect(container.querySelector(".Game-currentPlayer")).not.toBeNull();
 
-//   const boardTds = gameDiv.querySelectorAll("td");
-//   expect(boardTds.length).toBe(12);
+  const button = container.querySelector(".Game-button");
+  expect(button).toHaveTextContent('Restart Game');
 
-//   const boardTrs = gameDiv.querySelectorAll("tr");
-//   expect(boardTrs.length).toBe(4);
+  expect(GameBoard).toHaveBeenCalled();
+});
 
-//   const gamePieces = gameDiv.querySelectorAll(".GamePiece");
-//   expect(gamePieces.length).toBe(2);
+test('Game handles button click and calls startGame() callback', () => {
+  game.players = [1,2];
+  game.gameState = 1;
 
-//   const highlightedCells = gameDiv.querySelectorAll(
-//     '.BoardPlayCell[style="background-color: rgb(197, 197, 197);"]'
-//   );
-//   expect(highlightedCells.length).toBe(1);
+  const { container } = render(
+    <Game game={game} dropPiece={dropPiece} startGame={startGame}/>
+  );
 
-//   const boardPlayCellTd = container.querySelector("#BoardDropCell-2");
-//   fireEvent.click(boardPlayCellTd);
-//   expect(returnedColIndex).toBe(2);
-// });
+  const button = container.querySelector(".Game-button");
+  fireEvent.click(button);
+  expect(startGameCalled).toBe(true);
+});
+
