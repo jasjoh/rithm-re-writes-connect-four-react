@@ -4,7 +4,7 @@ import Player from "./Player.js"
 /** Displays the list of players added to the game
  *
  * Props:
- *  - players: An array of player objects { playerId, playerColor }
+ *  - players: An array of player objects { name, color, id, ai }
  *  - remove(): A callback function for when a 'remove' button is clicked
  *
  * State:
