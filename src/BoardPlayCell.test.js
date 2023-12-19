@@ -1,30 +1,22 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import BoardPlayCell from './BoardPlayCell'
+import GamePiece from './GamePiece';
 
-test('renders BoardPlayCell component with default color and no highlight', () => {
+jest.mock('./GamePiece');
+
+test('BoardPlayCell renders without crashing when passed valid props', () => {
   const { container } = render(
-    <BoardPlayCell />
+    <BoardPlayCell highlight={false} color={undefined} />
   );
 
   const boardPlayCellTd = container.querySelector("td");
-  expect(boardPlayCellTd).not.toHaveClass('GamePiece');
-  expect(boardPlayCellTd).not.toContainHTML('background-color');
+  expect(boardPlayCellTd).toHaveClass('BoardPlayCell');
 });
 
-test('renders BoardPlayCell component with specified color', () => {
+test('BoardPlayCell renders with highlight when expected', () => {
   const { container } = render(
-    <BoardPlayCell color={'#c3c3c3'}/>
-  );
-  const gamePieceDiv = container.querySelector(".GamePiece");
-  expect(gamePieceDiv).toHaveStyle({
-    backgroundColor: '#c3c3c3;'
-  });
-});
-
-test('renders BoardPlayCell component with highlight', () => {
-  const { container } = render(
-    <BoardPlayCell highlight={true}/>
+    <BoardPlayCell highlight={true} color={undefined} />
   );
 
   const boardPlayCellTd = container.querySelector("td");
@@ -33,18 +25,10 @@ test('renders BoardPlayCell component with highlight', () => {
   });
 });
 
-test('renders BoardPlayCell component with color and highlight', () => {
-  const { container } = render(
-    <BoardPlayCell color={'#b4b4b4'} highlight={true}/>
-  );
+test('BoardPlayRow passes correct params to child component', () => {
+  render(<BoardPlayCell color={'#c3c3c3'} highlight={true} />);
 
-  const boardPlayCellTd = container.querySelector("td");
-  expect(boardPlayCellTd).toHaveStyle({
-    backgroundColor: '#c5c5c5;'
-  });
-
-  const gamePieceDiv = container.querySelector(".GamePiece");
-  expect(gamePieceDiv).toHaveStyle({
-    backgroundColor: '#b4b4b4;'
-  });
+  expect(GamePiece).toHaveBeenCalledWith({
+    color: '#c3c3c3'
+  }, expect.anything()) // expect.anything() accounts for {} passed in all React calls
 });
