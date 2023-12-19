@@ -1,6 +1,7 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import BoardDropRow from './BoardDropRow'
+import BoardDropCell from './BoardDropCell'
 
 /**
  * Takes in width and dropPiece() as props
@@ -8,36 +9,27 @@ import BoardDropRow from './BoardDropRow'
  * Renders one or more BoardDropsCells with key, colIndex and dropPiece
  */
 
-test('renders BoardDropRow component without errors', () => {
+// mock child components
+jest.mock('./BoardDropCell');
+
+function dropPiece() {};
+
+test('BoardDropRow renders without crashing when passed valid props', () => {
   const { container } = render(
-    <BoardDropRow />
+    <BoardDropRow width={3} dropPiece={dropPiece} />
   );
 
   const boardDropRowTr = container.querySelector("tr");
   expect(boardDropRowTr).toHaveClass('BoardDropRow');
 });
 
-test('renders 4 TDs when width is 4', () => {
-  const { container } = render(
-    <BoardDropRow width={4}/>
-  );
+test('BoardDropRow passes correct params to correct # child components', () => {
+  render(<BoardDropRow width={3} dropPiece={dropPiece} />);
 
-  const boardDropRowTr = container.querySelector("tr");
-  const boardDropCellTds = boardDropRowTr.querySelectorAll("td");
-  expect(boardDropCellTds.length).toBe(4);
-});
+  expect(BoardDropCell).toHaveBeenCalledTimes(3);
 
-test('rendered td calls provided dropPiece() with passed in colIndex on click', () => {
-  let returnedColIndex;
-  function dropPiece(colIndex) {
-    returnedColIndex = colIndex;
-  }
-
-  const { container } = render(
-    <BoardDropRow width={1} dropPiece={dropPiece}/>
-  );
-
-  const boardPlayCellTd = container.querySelector("td");
-  fireEvent.click(boardPlayCellTd);
-  expect(returnedColIndex).toBe(0);
+  expect(BoardDropCell).toHaveBeenCalledWith({
+    colIndex: 0,
+    dropPiece: dropPiece
+  }, expect.anything()) // expect.anything() accounts for {} passed in all React calls
 });

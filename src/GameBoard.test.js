@@ -1,7 +1,9 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import GameBoard from './GameBoard'
-import { createMockGame, createBoardState, setCellState } from './testHelpers';
+import BoardPlayRow from './BoardPlayRow';
+import BoardDropRow from './BoardDropRow';
+import { createBoardState, setCellState } from './testHelpers';
 
 /**
  * Props:
@@ -21,56 +23,38 @@ import { createMockGame, createBoardState, setCellState } from './testHelpers';
  *
  **/
 
+// mock child components
+jest.mock('./BoardDropRow');
+jest.mock('./BoardPlayRow');
 
-test('renders GameBoard component with 3x3 boardState', () => {
+function dropPiece() {};
+
+test('GameBoard renders without crashing when passed valid props', () => {
   let boardState = createBoardState();
 
   const { container } = render(
-    <GameBoard boardState={boardState}/>
+    <GameBoard boardState={boardState} dropPiece={dropPiece} />
   );
 
   const gameBoard = container.querySelector("div");
   expect(gameBoard).toHaveClass('GameBoard');
-
-  const boardTds = gameBoard.querySelectorAll("td");
-  expect(boardTds.length).toBe(12);
-
-  const boardTrs = gameBoard.querySelectorAll("tr");
-  expect(boardTrs.length).toBe(4);
 });
 
-test('renders GameBoard component with some players and highlights', () => {
+test('GameBoard passes correct params to correct # child components', () => {
   let boardState = createBoardState();
-  setCellState(boardState, 1, 1, { id: 12345, color: '#c4c4c4'}, false);
-  setCellState(boardState, 2, 2, { id: 7892, color: '#a4a4a4'}, true);
 
-  let returnedColIndex;
-  function dropPiece(colIndex) {
-    returnedColIndex = colIndex;
-  }
+  render(<GameBoard boardState={boardState} dropPiece={dropPiece} />);
 
-  const { container } = render(
-    <GameBoard boardState={boardState} dropPiece={dropPiece}/>
-  );
+  expect(BoardDropRow).toHaveBeenCalled();
+  expect(BoardPlayRow).toHaveBeenCalledTimes(3);
 
-  const gameBoard = container.querySelector("div");
-  expect(gameBoard).toHaveClass('GameBoard');
+  expect(BoardDropRow).toHaveBeenCalledWith({
+    width: 3,
+    dropPiece: dropPiece
+  }, expect.anything()) // expect.anything() accounts for {} passed in all React calls
 
-  const boardTds = gameBoard.querySelectorAll("td");
-  expect(boardTds.length).toBe(12);
+  expect(BoardPlayRow).toHaveBeenCalledWith({
+    rowState: boardState[0]
+  }, expect.anything()) // expect.anything() accounts for {} passed in all React calls
 
-  const boardTrs = gameBoard.querySelectorAll("tr");
-  expect(boardTrs.length).toBe(4);
-
-  const gamePieces = gameBoard.querySelectorAll(".GamePiece");
-  expect(gamePieces.length).toBe(2);
-
-  const highlightedCells = gameBoard.querySelectorAll(
-    '.BoardPlayCell[style="background-color: rgb(197, 197, 197);"]'
-  );
-  expect(highlightedCells.length).toBe(1);
-
-  const boardPlayCellTd = container.querySelector("#BoardDropCell-2");
-  fireEvent.click(boardPlayCellTd);
-  expect(returnedColIndex).toBe(2);
 });

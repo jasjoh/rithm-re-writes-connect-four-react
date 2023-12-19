@@ -1,10 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import BoardPlayRow from './BoardPlayRow'
+import BoardPlayCell from './BoardPlayCell';
 
 /**
- * Takes in rowstate as prop [ { player, highlight } ]
- * Generates array of BoardPlayCells using rowstate data
+ * Takes in rowState as prop [ { player, highlight } ]
+ * Generates array of BoardPlayCells using rowState data
  * Renders one or more BoardPlayCells with key, highlight and color
  */
 
@@ -31,61 +32,42 @@ function createRowState(rows=1, players=0, highlights=0) {
   return rowState;
 }
 
-test('renders BoardPlayRow component no players', () => {
+jest.mock('./BoardPlayCell');
+
+test('BoardPlayRow renders without crashing when passed valid props', () => {
+
+  let rowState = createRowState()
+
   const { container } = render(
-    <BoardPlayRow rowState={createRowState(0)}/>
+    <BoardPlayRow rowState={rowState} />
   );
 
-  const boardPlayRowTr = container.querySelector("tr");
-  expect(boardPlayRowTr).not.toContainHTML('td');
+  const boardDropRowTr = container.querySelector("tr");
+  expect(boardDropRowTr).toHaveClass('BoardPlayRow');
 });
 
-test('renders BoardPlayRow component 1 player, no highlight', () => {
-  const { container } = render(
-    <BoardPlayRow rowState={createRowState(1, 1)}/>
-  );
+test('BoardPlayRow passes correct params to correct # child components', () => {
 
-  const boardPlayRowTr = container.querySelector("tr");
-  expect(boardPlayRowTr).toContainHTML('td');
+  let rowState = createRowState(3)
 
-  const boardPlayCellTd = container.querySelector("td");
-  let cellComputedStyle = window.getComputedStyle(boardPlayCellTd);
-  expect(cellComputedStyle.backgroundColor).toBe('');
+  render(<BoardPlayRow rowState={rowState} />);
 
-  const gamePieceDiv = container.querySelector("div");
-  expect(gamePieceDiv).toHaveStyle({
-    backgroundColor: '#f3f3f3;'
-  });
+  expect(BoardPlayCell).toHaveBeenCalledTimes(3);
+
+  expect(BoardPlayCell).toHaveBeenCalledWith({
+    color: undefined,
+    highlight: false
+  }, expect.anything()) // expect.anything() accounts for {} passed in all React calls
 });
 
-test('renders BoardPlayRow component 2 players, no highlight', () => {
-  const { container } = render(
-    <BoardPlayRow rowState={createRowState(2, 2)}/>
-  );
+test('BoardPlayRow passes correct highlight and color values to child component', () => {
 
-  const boardPlayRowTr = container.querySelector("tr");
-  const boardPlayCellTds = boardPlayRowTr.querySelectorAll("td");
-  expect(boardPlayCellTds.length).toBe(2);
-});
+  let rowState = createRowState(1, 1, 1)
 
-test('renders BoardPlayRow component 1 player and highlight', () => {
-  const { container } = render(
-    <BoardPlayRow rowState={createRowState(1, 1, 1)}/>
-  );
+  render(<BoardPlayRow rowState={rowState} />);
 
-  const boardPlayCellTd = container.querySelector("td");
-
-  expect(boardPlayCellTd).toHaveStyle({
-    backgroundColor: '#c5c5c5;'
-  });
-});
-
-test('renders BoardPlayRow component 2 rows, 1 player', () => {
-  const { container } = render(
-    <BoardPlayRow rowState={createRowState(2, 1)}/>
-  );
-
-  const boardPlayRowTr = container.querySelector("tr");
-  const boardPlayCellTds = boardPlayRowTr.querySelectorAll("td");
-  expect(boardPlayCellTds.length).toBe(2);
+  expect(BoardPlayCell).toHaveBeenCalledWith({
+    color: '#f3f3f3',
+    highlight: true
+  }, expect.anything()) // expect.anything() accounts for {} passed in all React calls
 });
