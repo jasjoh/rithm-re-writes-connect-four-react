@@ -4,12 +4,13 @@ import { useState } from "react";
 /** An individual game piece dropped by a player
  *
  * Props:
- *  - Color: The background color of the piece based on player selection
+ *  - add(): A callback function for when a player is added by a user
  *
  * State:
  *  - None
  *
  * PlayerManager -> AddPlayerForm*/
+
 function AddPlayerForm({ add }) {
   console.log("AddPlayerForm re-rendered");
 
