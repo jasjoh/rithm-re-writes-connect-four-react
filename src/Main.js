@@ -9,7 +9,8 @@ import { useEffect, useState } from "react";
  *  - None
  *
  * State:
- *  - None
+ *  - game: The instance of the game once initialized
+ *  - renderToggle: Used to trigger a re-render when game state is updated
  *
  * RoutesList -> Main -> { Alert, PlayerManager, Game } */
 function Main() {
