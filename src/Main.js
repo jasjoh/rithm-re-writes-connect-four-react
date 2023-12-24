@@ -1,6 +1,6 @@
-import Game from "./Game";
+import GameComponent from "./GameComponent";
 import PlayerManager from "./PlayerManager";
-import { Player, AiPlayer, Game as GameModel } from "./models";
+import { Player, AiPlayer, Game } from "./models";
 import { useEffect, useState } from "react";
 
 /** Parent level page for both the alert, player manager and game area
@@ -29,7 +29,7 @@ function Main() {
   /** Called once on mount to initialize a new game and set state */
   useEffect(function initGame() {
     // console.log("initGame() useEffect called")
-    setGame(new GameModel(aiCallback));
+    setGame(new Game(aiCallback));
   }, [])
 
   // console.log("Current game instance:", game);
@@ -97,7 +97,7 @@ function Main() {
     <div className="Main">
       <PlayerManager players={game.players} add={addPlayer} remove={removePlayer} />
       <div>{ alert }</div>
-      <Game
+      <GameComponent
         game={game}
         dropPiece={dropPiece}
         startGame={startGame} />

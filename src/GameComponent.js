@@ -1,4 +1,4 @@
-import "./Game.css";
+import "./GameComponent.css";
 import GameBoard from "./GameBoard";
 
 /** Displays the game area with the start / restart button and game board
@@ -11,9 +11,9 @@ import GameBoard from "./GameBoard";
  * State:
  *  - None
  *
- * Main -> Game -> GameBoard */
-function Game({ game, dropPiece, startGame }) {
-  console.log("Game re-rendered");
+ * Main -> GameComponent -> GameBoard */
+function GameComponent({ game, dropPiece, startGame }) {
+  console.log("GameComponent re-rendered");
 
   /** Handles user clicks on start / restart button */
   function handleStartGame() {
@@ -22,14 +22,14 @@ function Game({ game, dropPiece, startGame }) {
   }
 
   // if there are no players, nothing to do at this point
-  if (game.players.length < 2) { return <div className="Game"></div> }
+  if (game.players.length < 2) { return <div className="GameComponent"></div> }
 
   if (game.gameState === 0) {
     // game hasn't started, show start button, but no curr player or board
     return (
-      <div className="Game">
-        <div className="Game-button"><button onClick={handleStartGame}>
-          Start Game
+      <div className="GameComponent">
+        <div className="GameComponent-button"><button onClick={handleStartGame}>
+          Start GameComponent
         </button></div>
       </div>
     );
@@ -37,13 +37,13 @@ function Game({ game, dropPiece, startGame }) {
   } else {
     // game has started, show restart + curr player and board
     return (
-      <div className="Game">
-        <div className="Game-button-div">
-          <button className="Game-button" onClick={handleStartGame}>
-          Restart Game
+      <div className="GameComponent">
+        <div className="GameComponent-button-div">
+          <button className="GameComponent-button" onClick={handleStartGame}>
+          Restart GameComponent
           </button>
         </div>
-        <div className="Game-currentPlayer">
+        <div className="GameComponent-currentPlayer">
           Current Player: { game.currPlayer.name }
         </div>
         <GameBoard boardState={ game.board } dropPiece={ dropPiece }/>
@@ -52,4 +52,4 @@ function Game({ game, dropPiece, startGame }) {
   }
 }
 
-export default Game;
+export default GameComponent;

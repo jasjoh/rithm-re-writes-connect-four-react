@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, act } from '@testing-library/react';
 import Main from './Main';
-import Game from './Game';
-import { Game as GameModel } from './models';
+import GameComponent from './GameComponent';
+import { Game } from './models';
 import { createMockGame, createBoardState } from './testHelpers';
 
 /** Parent level page for both the alert, player manager and game area
@@ -27,10 +27,30 @@ import { createMockGame, createBoardState } from './testHelpers';
  *
  * RoutesList -> Main -> { Alert, PlayerManager, Game }  */
 
-jest.mock('./Game');
+jest.mock('./GameComponent');
 
-function dropPiece(colIndex) {};
-function startGame() {};
+// mock the game's dropPiece() function
+// jest.mock('./models', () => {
+//   const originalModels = jest.requireActual('./models');
+//   const OriginalGame = jest.requireActual('./models').Game;
+//   class MockedGame extends OriginalGame {
+//     dropPiece = jest.fn(() => 'mocked dropPiece');
+//   }
+//   return {
+//     ...originalModels,
+//     Game: jest.fn(MockedGame)
+//     // Game: jest.fn(() => ({
+//     //   ...originalGame,
+//     //   // dropPiece: jest.fn(() => 'mocked dropPiece')
+//     // }))
+//   };
+// });
+
+const mockGame = new Game;
+console.log("mockGame dropPiece", mockGame.dropPiece);
+
+// function dropPiece(colIndex) {};
+// function startGame() {};
 
 test('Main component renders without crashing', () => {
   // default game has player count of 0 and gameState of 0
@@ -44,43 +64,79 @@ test('Main component renders without crashing', () => {
   expect(gameDiv).toHaveClass('Main');
 });
 
-test('Main component renders and in turn renders Game', () => {
+test('Main component renders and in turn renders GameComponent', () => {
 
   render(<Main />);
 
-  expect(Game).toHaveBeenCalled();
+  expect(GameComponent).toHaveBeenCalled();
 });
 
-// test('TEMP: Main component renders and in turn renders Game; null values', () => {
-
-//   render(<Main />);
-
-//   expect(Game).toHaveBeenCalledWith({
-//     game: expect.any(GameModel),
-//     dropPiece: dropPiece,
-//     startGame: startGame
-//   }, expect.anything())
-// });
-
-// test('TEMP: Main component renders and in turn renders Game; null game', () => {
-
-//   render(<Main />);
-
-//   expect(Game).toHaveBeenCalledWith({
-//     game: null,
-//     dropPiece: dropPiece,
-//     startGame: startGame
-//   }, expect.anything())
-// });
-
-
-test('Main component renders, initializing a game instance and passes it to Game', () => {
+test('Main component renders, initializing a game instance and passes it to GameComponent', () => {
 
   render(<Main />);
 
-  expect(Game).toHaveBeenCalledWith({
-    game: expect.any(GameModel),
+  expect(GameComponent).toHaveBeenCalledWith({
+    game: expect.any(Game),
     dropPiece: expect.any(Function),
     startGame: expect.any(Function)
   }, expect.anything())
 });
+
+test('Main component listens for aiCallback() and re-renders', () => {
+
+  render(<Main />);
+
+  // grab the aiCallback() function that Main provided
+  const aiCallback = GameComponent.mock.calls[0][0].game.aiCallback
+
+  // track how many times Main has rendered by counting mock Game calls
+  const priorGameComponentCalls = GameComponent.mock.calls.length;
+  console.log("GameComponent calls", GameComponent.mock.calls.length);
+
+  // call the aiCallback()
+  act(() => {
+    aiCallback();
+  });
+
+  expect(GameComponent.mock.calls.length).toBe(priorGameComponentCalls + 1);
+});
+
+test('Main component handles dropPiece() calls and re-renders', () => {
+
+  // mock the game's dropPiece() function
+  // jest.mock('./models', () => {
+  //   const originalModule = jest.requireActual('./models');
+  //   return {
+  //     ...originalModule,
+  //     Game: jest.fn(() => ({
+  //       dropPiece: jest.fn(() => 'mocked dropPiece')
+  //     }))
+  //   };
+  // });
+
+  render(<Main />);
+
+  // grab the aiCallback() function that Main provided
+  const dropPiece = GameComponent.mock.calls[0][0].dropPiece;
+
+  // track how many times Main has rendered by counting mock Game calls
+  const priorGameComponentCalls = GameComponent.mock.calls.length;
+  console.log("GameComponent calls", GameComponent.mock.calls.length);
+
+  // call dropPiece() with colIndex 2
+  act(() => {
+    dropPiece(2);
+  });
+
+  expect(Game).toHaveBeenCalledTimes(1);
+
+  // let foo = require('./models').Game;
+  // console.log("Game.dropPiece", Game.dropPiece);
+  console.log("Game.mock before init", Game.mock);
+  // console.log("foo.mock before init", foo.mock);
+
+  // expect(GameComponent.mock.calls.length).toBe(priorGameComponentCalls + 1);
+  // expect(Game.mock.instances[0].dropPiece).toHaveBeenCalledWith(2);
+});
+
+

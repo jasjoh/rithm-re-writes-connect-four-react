@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import Game from './Game'
+import GameComponent from './GameComponent'
 import GameBoard from './GameBoard';
 import { createMockGame, createBoardState } from './testHelpers';
 
@@ -24,7 +24,7 @@ import { createMockGame, createBoardState } from './testHelpers';
  * - Current Player
  * - GameBoard (passing game.board and dropPiece())
  *
- * Main -> Game -> GameBoard */
+ * Main -> GameComponent -> GameBoard */
 
 let boardState = createBoardState();
 let game = createMockGame(boardState);
@@ -66,13 +66,13 @@ class BarTest {
 
 let foo = new FooTest('happy');
 
-jest.mock('./Game');
+jest.mock('./GameComponent');
 
 test('Class matching capability', () => {
 
-  render(<Game game={foo} dropPiece={dropPiece} startGame={startGame}/>)
+  render(<GameComponent game={foo} dropPiece={dropPiece} startGame={startGame}/>)
 
-  expect(Game).toHaveBeenCalledWith({
+  expect(GameComponent).toHaveBeenCalledWith({
     game: expect.any(FooTest),
     dropPiece: dropPiece,
     startGame: startGame
@@ -81,28 +81,28 @@ test('Class matching capability', () => {
 
 */
 
-test('Game component renders without crashing when passed valid params', () => {
+test('GameComponent component renders without crashing when passed valid params', () => {
   // default game has player count of 0 and gameState of 0
   // only empty div should be rendered
 
   const { container } = render(
-    <Game game={game} dropPiece={dropPiece} startGame={startGame}/>
+    <GameComponent game={game} dropPiece={dropPiece} startGame={startGame}/>
   );
 
   const gameDiv = container.querySelector("div");
-  expect(gameDiv).toHaveClass('Game');
+  expect(gameDiv).toHaveClass('GameComponent');
 
-  expect(container.querySelector(".Game-button")).toBeNull();
-  expect(container.querySelector(".Game-currentPlayer")).toBeNull();
+  expect(container.querySelector(".GameComponent-button")).toBeNull();
+  expect(container.querySelector(".GameComponent-currentPlayer")).toBeNull();
 
   expect(GameBoard).not.toHaveBeenCalled();
 });
 
-test('Game component passes correct params to GameBoard', () => {
+test('GameComponent component passes correct params to GameBoard', () => {
   game.players = [1,2];
   game.gameState = 1;
 
-  render(<Game game={game} dropPiece={dropPiece} startGame={startGame}/>)
+  render(<GameComponent game={game} dropPiece={dropPiece} startGame={startGame}/>)
 
   expect(GameBoard).toHaveBeenCalled();
   // we could also use expect.objectContaining({ key: value }) instead of literal
@@ -112,55 +112,55 @@ test('Game component passes correct params to GameBoard', () => {
   }, expect.anything()) // expect.anything() accounts for {} passed in all React calls
 });
 
-test('Game component renders Start Game but not game board when 2+ players and game not started', () => {
+test('GameComponent component renders Start GameComponent but not game board when 2+ players and game not started', () => {
   game.players = [1,2];
   game.gameState = 0;
 
   const { container } = render(
-    <Game game={game} dropPiece={dropPiece} startGame={startGame}/>
+    <GameComponent game={game} dropPiece={dropPiece} startGame={startGame}/>
   );
 
   const gameDiv = container.querySelector("div");
-  expect(gameDiv).toHaveClass('Game');
+  expect(gameDiv).toHaveClass('GameComponent');
 
-  expect(container.querySelector(".Game-button")).not.toBeNull();
-  expect(container.querySelector(".Game-currentPlayer")).toBeNull();
+  expect(container.querySelector(".GameComponent-button")).not.toBeNull();
+  expect(container.querySelector(".GameComponent-currentPlayer")).toBeNull();
 
-  const button = container.querySelector(".Game-button");
-  expect(button).toHaveTextContent('Start Game');
+  const button = container.querySelector(".GameComponent-button");
+  expect(button).toHaveTextContent('Start GameComponent');
 
   expect(GameBoard).not.toHaveBeenCalled();
 });
 
-test('Game component renders Restart Game and game board when 2+ players and game is started', () => {
+test('GameComponent component renders Restart GameComponent and game board when 2+ players and game is started', () => {
   game.players = [1,2];
   game.gameState = 1;
 
   const { container } = render(
-    <Game game={game} dropPiece={dropPiece} startGame={startGame}/>
+    <GameComponent game={game} dropPiece={dropPiece} startGame={startGame}/>
   );
 
   const gameDiv = container.querySelector("div");
-  expect(gameDiv).toHaveClass('Game');
+  expect(gameDiv).toHaveClass('GameComponent');
 
-  expect(container.querySelector(".Game-button")).not.toBeNull();
-  expect(container.querySelector(".Game-currentPlayer")).not.toBeNull();
+  expect(container.querySelector(".GameComponent-button")).not.toBeNull();
+  expect(container.querySelector(".GameComponent-currentPlayer")).not.toBeNull();
 
-  const button = container.querySelector(".Game-button");
-  expect(button).toHaveTextContent('Restart Game');
+  const button = container.querySelector(".GameComponent-button");
+  expect(button).toHaveTextContent('Restart GameComponent');
 
   expect(GameBoard).toHaveBeenCalled();
 });
 
-test('Game handles button click and calls startGame() callback', () => {
+test('GameComponent handles button click and calls startGame() callback', () => {
   game.players = [1,2];
   game.gameState = 1;
 
   const { container } = render(
-    <Game game={game} dropPiece={dropPiece} startGame={startGame}/>
+    <GameComponent game={game} dropPiece={dropPiece} startGame={startGame}/>
   );
 
-  const button = container.querySelector(".Game-button");
+  const button = container.querySelector(".GameComponent-button");
   fireEvent.click(button);
   expect(startGameCalled).toBe(true);
 });
