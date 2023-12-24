@@ -50,6 +50,37 @@ beforeEach(() => {
   startGameCalled = false;
 })
 
+/* TESTING CLASS MATCHING CAPABILITY
+
+class FooTest {
+  constructor(bar) {
+    this.bar = bar;
+  }
+}
+
+class BarTest {
+  constructor(foo) {
+    this.foo = foo;
+  }
+}
+
+let foo = new FooTest('happy');
+
+jest.mock('./Game');
+
+test('Class matching capability', () => {
+
+  render(<Game game={foo} dropPiece={dropPiece} startGame={startGame}/>)
+
+  expect(Game).toHaveBeenCalledWith({
+    game: expect.any(FooTest),
+    dropPiece: dropPiece,
+    startGame: startGame
+  }, expect.anything()) // expect.anything() accounts for {} passed in all React calls
+});
+
+*/
+
 test('Game component renders without crashing when passed valid params', () => {
   // default game has player count of 0 and gameState of 0
   // only empty div should be rendered
@@ -133,4 +164,3 @@ test('Game handles button click and calls startGame() callback', () => {
   fireEvent.click(button);
   expect(startGameCalled).toBe(true);
 });
-

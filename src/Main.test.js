@@ -2,6 +2,7 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import Main from './Main';
 import Game from './Game';
+import { Game as GameModel } from './models';
 import { createMockGame, createBoardState } from './testHelpers';
 
 /** Parent level page for both the alert, player manager and game area
@@ -26,6 +27,11 @@ import { createMockGame, createBoardState } from './testHelpers';
  *
  * RoutesList -> Main -> { Alert, PlayerManager, Game }  */
 
+jest.mock('./Game');
+
+function dropPiece(colIndex) {};
+function startGame() {};
+
 test('Main component renders without crashing', () => {
   // default game has player count of 0 and gameState of 0
   // only empty div should be rendered
@@ -36,4 +42,15 @@ test('Main component renders without crashing', () => {
 
   const gameDiv = container.querySelector("div");
   expect(gameDiv).toHaveClass('Main');
+});
+
+test('Main component renders, initializing a game instance and passes it to Game', () => {
+
+  render(<Main />);
+
+  expect(Game).toHaveBeenCalledWith({
+    game: expect.anything(),
+    dropPiece: dropPiece,
+    startGame: startGame
+  }, expect.anything()) // expect.anything() accounts for {} passed in all React calls
 });
