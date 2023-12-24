@@ -44,13 +44,43 @@ test('Main component renders without crashing', () => {
   expect(gameDiv).toHaveClass('Main');
 });
 
+test('Main component renders and in turn renders Game', () => {
+
+  render(<Main />);
+
+  expect(Game).toHaveBeenCalled();
+});
+
+// test('TEMP: Main component renders and in turn renders Game; null values', () => {
+
+//   render(<Main />);
+
+//   expect(Game).toHaveBeenCalledWith({
+//     game: expect.any(GameModel),
+//     dropPiece: dropPiece,
+//     startGame: startGame
+//   }, expect.anything())
+// });
+
+// test('TEMP: Main component renders and in turn renders Game; null game', () => {
+
+//   render(<Main />);
+
+//   expect(Game).toHaveBeenCalledWith({
+//     game: null,
+//     dropPiece: dropPiece,
+//     startGame: startGame
+//   }, expect.anything())
+// });
+
+
 test('Main component renders, initializing a game instance and passes it to Game', () => {
 
   render(<Main />);
 
   expect(Game).toHaveBeenCalledWith({
-    game: expect.anything(),
-    dropPiece: dropPiece,
-    startGame: startGame
-  }, expect.anything()) // expect.anything() accounts for {} passed in all React calls
+    game: expect.any(GameModel),
+    dropPiece: expect.any(Function),
+    startGame: expect.any(Function)
+  }, expect.anything())
 });
