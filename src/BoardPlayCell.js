@@ -12,7 +12,7 @@ import GamePiece from "./GamePiece";
  *
  * BoardPlayRow -> BoardPlayCell -> GamePiece*/
 function BoardPlayCell({ highlight=false, color=undefined}) {
-  console.log("BoardPlayCell re-rendered");
+  // console.log("BoardPlayCell re-rendered");
 
   let style = {}
 

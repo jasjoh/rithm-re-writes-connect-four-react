@@ -12,7 +12,7 @@ import { useState } from "react";
  * PlayerManager -> AddPlayerForm*/
 
 function AddPlayerForm({ add }) {
-  console.log("AddPlayerForm re-rendered");
+  // console.log("AddPlayerForm re-rendered");
 
   const [formData, setFormData] = useState({
     playerName: "",

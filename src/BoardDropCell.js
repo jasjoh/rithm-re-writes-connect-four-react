@@ -11,7 +11,7 @@
  *
  * BoardDropRow -> BoardDropCell*/
 function BoardDropCell({ colIndex, dropPiece }) {
-  console.log("BoardDropCell re-rendered");
+  // console.log("BoardDropCell re-rendered");
 
   /** Handles a click and calls dropPiece with correct column index */
   function handleClick(evt) {

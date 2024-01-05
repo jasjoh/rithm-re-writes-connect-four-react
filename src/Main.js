@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
  *
  * RoutesList -> Main -> { Alert, PlayerManager, Game } */
 function Main() {
-  console.log("Main re-rendered");
+  // console.log("Main re-rendered");
 
   /** TODO:
   * - highlight pieces on a win

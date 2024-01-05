@@ -13,7 +13,7 @@ import "./Player.css"
  *
  * PlayerList -> Player */
 function Player({ playerId, playerName, playerColor, remove }) {
-  console.log("Player re-rendered");
+  // console.log("Player re-rendered");
 
   const colorCircleStyle = {
     backgroundColor: playerColor

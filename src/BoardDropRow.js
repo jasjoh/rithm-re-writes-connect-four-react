@@ -12,7 +12,7 @@ import BoardDropCell from "./BoardDropCell";
  *
  * GameBoard -> BoardDropRow -> BoardDropCell */
 function BoardDropRow({ width, dropPiece }) {
-  console.log("BoardDropRow re-rendered, passed width of:", width);
+  // console.log("BoardDropRow re-rendered, passed width of:", width);
 
   let cellsJsx = [];
   let curCol = 0;

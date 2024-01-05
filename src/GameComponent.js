@@ -13,7 +13,7 @@ import GameBoard from "./GameBoard";
  *
  * Main -> GameComponent -> GameBoard */
 function GameComponent({ game, dropPiece, startGame }) {
-  console.log("GameComponent re-rendered");
+  // console.log("GameComponent re-rendered");
 
   /** Handles user clicks on start / restart button */
   function handleStartGame() {

@@ -10,7 +10,7 @@ import "./GamePiece.css"
  *
  * BoardPlayCell -> GamePiece*/
 function GamePiece({ color='#ff0000' }) {
-  console.log("GamePiece re-rendered");
+  // console.log("GamePiece re-rendered");
 
   const style = {
     backgroundColor: color

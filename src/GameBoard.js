@@ -16,7 +16,7 @@ import BoardDropRow from "./BoardDropRow";
  *
  * Main -> GameBoard -> [ BoardDropRow, BoardPlayRow ] */
 function GameBoard({ boardState, dropPiece }) {
-  console.log("GameBoard re-rendered");
+  // console.log("GameBoard re-rendered");
   // console.log("called w/ boardState:", boardState);
   /**
    * boardState structure:

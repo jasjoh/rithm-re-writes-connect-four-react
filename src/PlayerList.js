@@ -12,7 +12,7 @@ import Player from "./Player.js"
  *
  * PlayerManager -> PlayerList -> Player */
 function PlayerList({ players, remove }) {
-  console.log("PlayerList re-rendered");
+  // console.log("PlayerList re-rendered");
 
   return (
     <div className="PlayerList">
