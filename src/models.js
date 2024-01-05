@@ -36,7 +36,7 @@ class Player {
  */
 class AiPlayer extends Player {
   constructor(name, color) {
-    super(name, color);
+    super(name, color, true);
     this.availCols = [];
   }
 
@@ -103,7 +103,7 @@ class Game {
    * */
   addPlayer(player) {
     //TODO: Error logic for player already added to game.
-    // console.log("game.addPlayer() called");
+    console.log("game.addPlayer() called with:", player);
     this.players.push(player);
   }
 

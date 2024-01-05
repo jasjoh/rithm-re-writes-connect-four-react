@@ -2,7 +2,8 @@ import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
 import Main from './Main';
 import GameComponent from './GameComponent';
-import { Game } from './models';
+import PlayerManager from './PlayerManager';
+import { Game, AiPlayer, Player } from './models';
 import { createMockGame, createBoardState } from './testHelpers';
 
 /** Parent level page for both the alert, player manager and game area
@@ -28,29 +29,7 @@ import { createMockGame, createBoardState } from './testHelpers';
  * RoutesList -> Main -> { Alert, PlayerManager, Game }  */
 
 jest.mock('./GameComponent');
-
-// mock the game's dropPiece() function
-// jest.mock('./models', () => {
-//   const originalModels = jest.requireActual('./models');
-//   const OriginalGame = jest.requireActual('./models').Game;
-//   class MockedGame extends OriginalGame {
-//     dropPiece = jest.fn(() => 'mocked dropPiece');
-//   }
-//   return {
-//     ...originalModels,
-//     Game: jest.fn(MockedGame)
-//     // Game: jest.fn(() => ({
-//     //   ...originalGame,
-//     //   // dropPiece: jest.fn(() => 'mocked dropPiece')
-//     // }))
-//   };
-// });
-
-const mockGame = new Game;
-console.log("mockGame dropPiece", mockGame.dropPiece);
-
-// function dropPiece(colIndex) {};
-// function startGame() {};
+jest.mock('./PlayerManager');
 
 test('Main component renders without crashing', () => {
   // default game has player count of 0 and gameState of 0
@@ -60,8 +39,8 @@ test('Main component renders without crashing', () => {
     <Main />
   );
 
-  const gameDiv = container.querySelector("div");
-  expect(gameDiv).toHaveClass('Main');
+  const mainDiv = container.querySelector("div");
+  expect(mainDiv).toHaveClass('Main');
 });
 
 test('Main component renders and in turn renders GameComponent', () => {
@@ -103,21 +82,12 @@ test('Main component listens for aiCallback() and re-renders', () => {
 
 test('Main component handles dropPiece() calls and re-renders', () => {
 
-  // mock the game's dropPiece() function
-  // jest.mock('./models', () => {
-  //   const originalModule = jest.requireActual('./models');
-  //   return {
-  //     ...originalModule,
-  //     Game: jest.fn(() => ({
-  //       dropPiece: jest.fn(() => 'mocked dropPiece')
-  //     }))
-  //   };
-  // });
-
   render(<Main />);
 
   // grab the aiCallback() function that Main provided
   const dropPiece = GameComponent.mock.calls[0][0].dropPiece;
+  const game = GameComponent.mock.calls[0][0].game;
+  const dropPieceSpy = jest.spyOn(game, 'dropPiece');
 
   // track how many times Main has rendered by counting mock Game calls
   const priorGameComponentCalls = GameComponent.mock.calls.length;
@@ -128,15 +98,53 @@ test('Main component handles dropPiece() calls and re-renders', () => {
     dropPiece(2);
   });
 
-  expect(Game).toHaveBeenCalledTimes(1);
+  expect(dropPieceSpy).toHaveBeenCalledTimes(1);
+  expect(GameComponent.mock.calls.length).toBe(priorGameComponentCalls + 1);
+});
 
-  // let foo = require('./models').Game;
-  // console.log("Game.dropPiece", Game.dropPiece);
-  console.log("Game.mock before init", Game.mock);
-  // console.log("foo.mock before init", foo.mock);
+test('Main component handles addPlayer() calls and re-renders', () => {
 
-  // expect(GameComponent.mock.calls.length).toBe(priorGameComponentCalls + 1);
-  // expect(Game.mock.instances[0].dropPiece).toHaveBeenCalledWith(2);
+  render(<Main />);
+
+  // grab the aiCallback() function that Main provided
+  const mainAddPlayer = PlayerManager.mock.calls[0][0].add;
+  const game = GameComponent.mock.calls[0][0].game;
+  const gameAddPlayerSpy = jest.spyOn(game, 'addPlayer');
+
+  // track how many times Main has rendered by counting mock Game calls
+  const priorGameComponentCalls = GameComponent.mock.calls.length;
+  console.log("GameComponent calls", GameComponent.mock.calls.length);
+
+  const aiFormData = {
+    ai: true,
+    color: '#c3c3c3',
+    playerName: 'foo'
+  }
+
+  const humanFormData = {
+    ai: false,
+    color: '#c3c3c3',
+    playerName: 'foo'
+  }
+
+  act(() => {
+    mainAddPlayer(aiFormData);
+  });
+
+  expect(gameAddPlayerSpy).toHaveBeenCalledTimes(1);
+  expect(gameAddPlayerSpy).toHaveBeenCalledWith(expect.any(AiPlayer));
+  expect(GameComponent.mock.calls.length).toBe(priorGameComponentCalls + 1);
+
+  gameAddPlayerSpy.mockClear();
+
+  act(() => {
+    mainAddPlayer(humanFormData);
+  });
+
+  expect(gameAddPlayerSpy).toHaveBeenCalledTimes(1);
+  expect(gameAddPlayerSpy).not.toHaveBeenCalledWith(expect.any(AiPlayer));
+  expect(gameAddPlayerSpy).toHaveBeenCalledWith(expect.any(Player));
+  expect(GameComponent.mock.calls.length).toBe(priorGameComponentCalls + 2);
 });
 
 

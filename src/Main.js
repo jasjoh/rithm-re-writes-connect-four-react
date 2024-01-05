@@ -53,7 +53,7 @@ function Main() {
    * formData = { playerName, color, ai }
    * */
   function addPlayer(formData) {
-    // console.log("addPlayer called with playerData:", formData);
+    console.log("addPlayer called with playerData:", formData);
     if (formData.ai === true) {
       game.addPlayer(new AiPlayer(formData.playerName, formData.color))
     } else {
