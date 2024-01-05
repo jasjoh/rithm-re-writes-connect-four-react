@@ -1,10 +1,11 @@
 import React from 'react';
-import { render, fireEvent, act } from '@testing-library/react';
+import { render, fireEvent, act, waitFor } from '@testing-library/react';
 import Main from './Main';
 import GameComponent from './GameComponent';
 import PlayerManager from './PlayerManager';
 import { Game, AiPlayer, Player } from './models';
 import { createMockGame, createBoardState } from './testHelpers';
+import { wait } from '@testing-library/user-event/dist/utils';
 
 /** Parent level page for both the alert, player manager and game area
  *
@@ -146,5 +147,68 @@ test('Main component handles addPlayer() calls and re-renders', () => {
   expect(gameAddPlayerSpy).toHaveBeenCalledWith(expect.any(Player));
   expect(GameComponent.mock.calls.length).toBe(priorGameComponentCalls + 2);
 });
+
+test('Main component handles removePlayer() calls and re-renders', () => {
+
+  render(<Main />);
+
+  // grab the aiCallback() function that Main provided
+  const mainRemovePlayer = PlayerManager.mock.calls[0][0].remove;
+  const game = GameComponent.mock.calls[0][0].game;
+  const gameRemovePlayerSpy = jest.spyOn(game, 'removePlayer');
+
+  // track how many times Main has rendered by counting mock Game calls
+  const priorGameComponentCalls = GameComponent.mock.calls.length;
+  console.log("GameComponent calls", GameComponent.mock.calls.length);
+
+  act(() => {
+    mainRemovePlayer('1234');
+  });
+
+  expect(gameRemovePlayerSpy).toHaveBeenCalledTimes(1);
+  expect(gameRemovePlayerSpy).toHaveBeenCalledWith('1234');
+  expect(GameComponent.mock.calls.length).toBe(priorGameComponentCalls + 1);
+});
+
+test('Main component handles startGame() calls and re-renders', async () => {
+
+  render(<Main />);
+
+  // grab the aiCallback() function that Main provided
+  const mainAddPlayer = PlayerManager.mock.calls[0][0].add;
+  const mainStartGame = GameComponent.mock.calls[0][0].startGame;
+  const game = GameComponent.mock.calls[0][0].game;
+  const gameStartGameSpy = jest.spyOn(game, 'startGame');
+
+  // track how many times Main has rendered by counting mock Game calls
+  const priorGameComponentCalls = GameComponent.mock.calls.length;
+  console.log("GameComponent calls", GameComponent.mock.calls.length);
+
+  act(() => {
+    mainAddPlayer({
+      ai: false,
+      color: '#c3c3c3',
+      playerName: 'foo'
+    });
+  });
+
+  act(() => {
+    mainAddPlayer({
+      ai: false,
+      color: '#c3c3c3',
+      playerName: 'bar'
+    });
+  });
+
+  act(() => {
+    mainStartGame();
+  });
+
+  await waitFor(() => {
+    expect(gameStartGameSpy).toHaveBeenCalledTimes(1);
+    expect(GameComponent.mock.calls.length).toBe(priorGameComponentCalls + 3);
+  })
+});
+
 
 

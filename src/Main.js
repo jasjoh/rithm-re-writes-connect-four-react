@@ -53,7 +53,7 @@ function Main() {
    * formData = { playerName, color, ai }
    * */
   function addPlayer(formData) {
-    console.log("addPlayer called with playerData:", formData);
+    // console.log("addPlayer called with playerData:", formData);
     if (formData.ai === true) {
       game.addPlayer(new AiPlayer(formData.playerName, formData.color))
     } else {
@@ -64,9 +64,9 @@ function Main() {
   }
 
   /** Called when a user removes a player from a game */
-  async function removePlayer(playerId) {
+  function removePlayer(playerId) {
     // console.log("removePlayer called with playerId:", playerId);
-    await game.removePlayer(playerId);
+    game.removePlayer(playerId);
     setRenderToggle(renderToggle => !renderToggle);
   }
 
