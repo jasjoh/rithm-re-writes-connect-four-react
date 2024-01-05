@@ -22,15 +22,15 @@ function Main() {
   * - add typescript
    */
 
-  const [game, setGame] = useState(undefined);
+  const [game, setGame] = useState(new Game(aiCallback));
   const [renderToggle, setRenderToggle] = useState(false);
   let alert = '';
 
   /** Called once on mount to initialize a new game and set state */
-  useEffect(function initGame() {
-    // console.log("initGame() useEffect called")
-    setGame(new Game(aiCallback));
-  }, [])
+  // useEffect(function initGame() {
+  //   // console.log("initGame() useEffect called")
+  //   setGame(new Game(aiCallback));
+  // }, [])
 
   // console.log("Current game instance:", game);
 
@@ -77,7 +77,7 @@ function Main() {
     setRenderToggle(renderToggle => !renderToggle);
   }
 
-  if (game === undefined) { return <div> Game loading </div>}
+  // if (game === undefined) { return <div> Game loading </div>}`
 
   // handle winning game
   if (game.gameState === 2) {
@@ -96,7 +96,7 @@ function Main() {
   return (
     <div className="Main">
       <PlayerManager players={game.players} add={addPlayer} remove={removePlayer} />
-      <div>{ alert }</div>
+      <div className="Main-alert">{ alert }</div>
       <GameComponent
         game={game}
         dropPiece={dropPiece}

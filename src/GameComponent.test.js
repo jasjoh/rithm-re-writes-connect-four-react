@@ -112,7 +112,7 @@ test('GameComponent component passes correct params to GameBoard', () => {
   }, expect.anything()) // expect.anything() accounts for {} passed in all React calls
 });
 
-test('GameComponent component renders Start GameComponent but not game board when 2+ players and game not started', () => {
+test('GameComponent component renders Start Game but not game board when 2+ players and game not started', () => {
   game.players = [1,2];
   game.gameState = 0;
 
@@ -127,12 +127,12 @@ test('GameComponent component renders Start GameComponent but not game board whe
   expect(container.querySelector(".GameComponent-currentPlayer")).toBeNull();
 
   const button = container.querySelector(".GameComponent-button");
-  expect(button).toHaveTextContent('Start GameComponent');
+  expect(button).toHaveTextContent('Start Game');
 
   expect(GameBoard).not.toHaveBeenCalled();
 });
 
-test('GameComponent component renders Restart GameComponent and game board when 2+ players and game is started', () => {
+test('GameComponent component renders Restart Game and game board when 2+ players and game is started', () => {
   game.players = [1,2];
   game.gameState = 1;
 
@@ -147,7 +147,7 @@ test('GameComponent component renders Restart GameComponent and game board when 
   expect(container.querySelector(".GameComponent-currentPlayer")).not.toBeNull();
 
   const button = container.querySelector(".GameComponent-button");
-  expect(button).toHaveTextContent('Restart GameComponent');
+  expect(button).toHaveTextContent('Restart Game');
 
   expect(GameBoard).toHaveBeenCalled();
 });

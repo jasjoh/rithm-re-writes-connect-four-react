@@ -29,7 +29,7 @@ function GameComponent({ game, dropPiece, startGame }) {
     return (
       <div className="GameComponent">
         <div className="GameComponent-button"><button onClick={handleStartGame}>
-          Start GameComponent
+          Start Game
         </button></div>
       </div>
     );
@@ -40,7 +40,7 @@ function GameComponent({ game, dropPiece, startGame }) {
       <div className="GameComponent">
         <div className="GameComponent-button-div">
           <button className="GameComponent-button" onClick={handleStartGame}>
-          Restart GameComponent
+          Restart Game
           </button>
         </div>
         <div className="GameComponent-currentPlayer">

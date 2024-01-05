@@ -44,11 +44,12 @@ test('Main component renders without crashing', () => {
   expect(mainDiv).toHaveClass('Main');
 });
 
-test('Main component renders and in turn renders GameComponent', () => {
+test('Main component renders and in turn renders child components', () => {
 
   render(<Main />);
 
   expect(GameComponent).toHaveBeenCalled();
+  expect(PlayerManager).toHaveBeenCalled();
 });
 
 test('Main component renders, initializing a game instance and passes it to GameComponent', () => {
@@ -210,5 +211,50 @@ test('Main component handles startGame() calls and re-renders', async () => {
   })
 });
 
+test('Main component adds board highlights and displays winner name', () => {
 
+  const { container } = render(<Main />);
+
+  const game = GameComponent.mock.calls[0][0].game;
+  game.currPlayer = { name: 'foobar' };
+  game.gameState = 2;
+  game.winningSet = [
+    [0,1],
+    [0,2]
+  ]
+  // console.log('game', game);
+
+  // call aiCallback() to trigger a re-rendering once state is changed
+  const aiCallback = GameComponent.mock.calls[0][0].game.aiCallback
+  act(() => {
+    aiCallback();
+  });
+
+  expect(game.board[0][1].highlight).toBe(true);
+  expect(game.board[0][2].highlight).toBe(true);
+  expect(game.board[0][3].highlight).toBeUndefined;
+
+  let alertDiv = container.querySelector(".Main-alert");
+  expect(alertDiv).toHaveTextContent('foobar has won the game!');
+
+});
+
+test('Main component displays tie alert', () => {
+
+  const { container } = render(<Main />);
+
+  const game = GameComponent.mock.calls[0][0].game;
+  game.currPlayer = { name: 'foobar' };
+  game.gameState = 3;
+
+  // call aiCallback() to trigger a re-rendering once state is changed
+  const aiCallback = GameComponent.mock.calls[0][0].game.aiCallback
+  act(() => {
+    aiCallback();
+  });
+
+  let alertDiv = container.querySelector(".Main-alert");
+  expect(alertDiv).toHaveTextContent('Game is tied!');
+
+});
 
