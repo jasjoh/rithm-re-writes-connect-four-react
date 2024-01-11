@@ -17,8 +17,6 @@ function Main() {
   // console.log("Main re-rendered");
 
   /** TODO:
-  * - highlight pieces on a win
-  * - add tests
   * - add typescript
    */
 
