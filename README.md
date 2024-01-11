@@ -13,3 +13,6 @@ Key Learnings:
 - You can access (and call) any callback functions passed down to a mocked child component via the code: `component.mock.calls[0][0] to access the params and then call the associated param value
 - **IMPORTANT**: When dealing with data models and components, in order to avoid potential of naming clashes when testing, consider name components with the suffix 'Component'.
 - When attempting to test whether the method of an instance has been called, you can use `spyOn()`, but only on the instance (e.g. accessed via `mock.instances`)- you cannot spy on the method within the class itself.
+
+Component Diagram
+![Export of Miro diagram of React components](c4-react-miro.jpg)
